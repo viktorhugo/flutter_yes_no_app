@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:yes_no_app/domain/entities/message.dart';
+import 'package:yes_no_app/presentation/providers/chat-provider.dart';
 import 'package:yes_no_app/presentation/widgets/chat/her_message_bubble.dart';
 
 import '../../widgets/chat/my_message_bubble.dart';
@@ -14,7 +17,7 @@ class ChatScreen extends StatelessWidget {
         leading: const Padding(
           padding: EdgeInsets.all(4.0),
           child: CircleAvatar(
-            backgroundImage:NetworkImage('https://scontent.feoh3-1.fna.fbcdn.net/v/t39.30808-6/271904506_10222041586362885_5873084902373251276_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=174925&_nc_ohc=pdtAIersFSwAX-U-1Vu&_nc_ht=scontent.feoh3-1.fna&oh=00_AfAAGHNp31AGffvRau_HV3X7U_M6CKpqsRopTnsjrmqVlw&oe=645DE054') ,
+            backgroundImage:NetworkImage('https://static.wikia.nocookie.net/jujutsu-kaisen/images/a/a2/Satoru_Gojo_-_Anime.jpg/revision/latest?cb=20201017190313&path-prefix=es') ,
           ),
         ),
         title: const Text('Mi amor'),
@@ -29,18 +32,32 @@ class _ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final chatProvider = context.watch<ChatProvider>(); // estar pendiente de los cambios
+    // que sucedan en esa instancia de la clase
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
-            Expanded(child: ListView.builder(
-              itemCount: 100,
-              itemBuilder: (context, index) {
-                return (index % 2 == 0) ? const MyMessageBubble() : const HerMessageBubble();
-              },
-            )),
-            const MessageFileBox()
+            Expanded(
+              child: ListView.builder(
+                controller: chatProvider.chatScrollController,
+                itemCount: chatProvider.listMessages.length,
+                itemBuilder: (context, index) {
+                  final message = chatProvider.listMessages[index];
+
+                  return (message.fromWho == FromWho.me) 
+                    ? MyMessageBubble(message: message)
+                    : HerMessageBubble(message: message);
+                },
+              )
+            ),
+            MessageFileBox(
+              // onValue: (value) => chatProvider.sendMessage(value)
+              onValue: chatProvider.sendMessage
+            )
           ],
         ),
       ),
