@@ -8,7 +8,6 @@ class ChatProvider extends ChangeNotifier {
   final ScrollController chatScrollController = ScrollController();
 
   List<Message> listMessages = [
-    Message(text: 'Hi sweetie', fromWho: FromWho.her),
     Message(text: 'Did you come back from work?', fromWho: FromWho.me)
   ];
   
@@ -27,6 +26,9 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> herReply(String msg) async {
     final herMessage = await getYesNoAnswer.getAnswer();
+    listMessages.add(herMessage);
+    notifyListeners();
+    moveScrollToBottom();
   }
 
   void moveScrollToBottom() {

@@ -29,15 +29,18 @@ class HerMessageBubble extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        // const _ImageBubble(),
-        // const SizedBox(height: 10),
+        _ImageBubble(image: message.imageUrl!),
+        const SizedBox(height: 5),
       ],
     );
   }
 }
 
 class _ImageBubble extends StatelessWidget {
-  const _ImageBubble({super.key});
+  
+  final String image;
+
+  const _ImageBubble({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class _ImageBubble extends StatelessWidget {
       
       borderRadius: BorderRadius.circular(20),
       child: Image.network(
-        'https://yesno.wtf/assets/yes/7-653c8ee5d3a6bbafd759142c9c18d76c.gif',
+        image,
         width: size.width * 0.5,
         height: 150,
         fit: BoxFit.cover,
